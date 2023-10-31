@@ -1,0 +1,28 @@
+.login-page::before {
+  content: "";
+  position: absolute;
+  left: -10%;
+  bottom: 0;
+  width: 120%;
+  height: 56%;
+  background-color: #014a2a;
+  z-index: -1;
+  border-top-left-radius: 40%;
+  border-top-right-radius: 40%;
+  border-top: 20px solid #fff;
+  box-shadow: 0px 0px 41px #d3d3d3;
+  .login-section {
+    box-shadow: 0px 0px 20px 10px #c5c1c1;
+  }
+}
+.login-error {
+  height: 30px;
+  font-size: smaller;
+  color: red;
+  display: flex;
+  align-items: center;
+  padding-left: 10px;
+}
+.login-section-form-container {
+  width: 370px;
+}

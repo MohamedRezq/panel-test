@@ -1,0 +1,39 @@
+.container {
+  //   max-width: 600px;
+  //   margin: auto;
+  padding: 20px;
+}
+
+.table {
+  width: 100%;
+
+  td {
+    padding: 10px;
+  }
+}
+
+.required {
+  color: #ff0000;
+}
+
+.edit-form label {
+  font-weight: bold;
+}
+
+.edit-form textarea {
+  resize: vertical;
+  min-height: 100px;
+  width: 100%;
+}
+
+.helpIcon {
+  margin-left: 5px;
+  font-size: 18px;
+  color: #666666;
+  cursor: pointer;
+  transition: color 0.3s;
+}
+
+.helpIcon:hover {
+  color: #000000;
+}

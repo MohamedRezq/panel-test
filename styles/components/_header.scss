@@ -1,0 +1,21 @@
+.header {
+  height: 70px;
+  .vertical-barrier {
+    background-color: gray;
+    width: 1px;
+    height: 20px;
+  }
+  .user-section {
+    .user-name {
+      height: fit-content;
+      font-size: 12pt;
+      text-align: end;
+    }
+    .user-category {
+      height: fit-content;
+      font-size: 7pt;
+      color: gray;
+      white-space: nowrap;
+    }
+  }
+}

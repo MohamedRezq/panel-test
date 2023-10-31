@@ -1,0 +1,11 @@
+.aside {
+  width: 25%;
+  min-width: 300px;
+  height: 100vh;
+  .aside-logo-container {
+    height: 70px;
+  }
+  .aside-tabs {
+    overflow-y: auto;
+  }
+}
