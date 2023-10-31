@@ -1,8 +1,10 @@
-import { API_ENDPOINT, PANEL_ENDPOINT } from "@/config";
+import { User } from "next-auth";
+import { API_ENDPOINT } from "@/config";
 import httpServices from "@/utils/httpServices";
-import { AuthOptions, User } from "next-auth";
-import NextAuth from "next-auth/next";
-import CredentialsProvider from "next-auth/providers/credentials";
+// import prisma from "./prisma";
+
+// import { compare } from "bcrypt";
+
 type LoginFn = (username: string, password: string) => Promise<User>;
 
 export const login: LoginFn = async (username, password) => {
@@ -30,51 +32,4 @@ export const login: LoginFn = async (username, password) => {
     console.log("error: ", error);
     return null;
   }
-};
-
-export const authOptions: AuthOptions = {
-  providers: [
-    CredentialsProvider({
-      name: "Credentials",
-
-      credentials: {
-        username: {
-          label: "Username",
-          type: "text",
-          placeholder: "username",
-        },
-        password: { label: "Password", type: "password" },
-      },
-
-      async authorize(credentials, req) {
-        if (!credentials?.username || !credentials?.password) return null;
-        try {
-          const user: User = await login(
-            credentials.username,
-            credentials.password
-          );
-          return user;
-        } catch (e: any) {
-          console.error("error: ", e);
-          return null;
-        }
-      },
-    }),
-  ],
-
-  pages: {
-    signIn: `/login?callbackUrl=${PANEL_ENDPOINT}/dashboard`,
-    error: `/login?error=FAILED`,
-    signOut: "/login",
-  },
-
-  callbacks: {
-    jwt: async ({ user, token }) => {
-      return { ...token, ...user };
-    },
-    session: async ({ token, session }) => {
-      session.user = { ...token };
-      return session;
-    },
-  },
 };
