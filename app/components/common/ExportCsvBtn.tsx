@@ -1,6 +1,7 @@
 import exportFromJSON, { ExportType } from "export-from-json";
 import React from "react";
 import { Button } from "react-bootstrap";
+import { BiExport } from "react-icons/bi";
 
 interface IExportFileProps {
   fileName: string;
@@ -20,8 +21,10 @@ const ExportCsvBtn = (props: IExportFileProps) => {
           exportType: props?.exportType ?? "csv",
         })
       }
+      className="d-flex gap-2 align-items-center"
     >
-      EXPORT
+      <div>EXPORT</div>
+      <BiExport size={18} />
     </Button>
   );
 };
