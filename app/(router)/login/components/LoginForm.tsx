@@ -1,9 +1,8 @@
 "use client";
 //----------------------------------------------------------//
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Button, Form } from "react-bootstrap";
 import { useRouter } from "next/navigation";
-import { PANEL_ENDPOINT } from "@/config";
 import { signIn } from "next-auth/react";
 import Loader from "@/app/components/common/Loader";
 //----------------------------------------------------------//
@@ -17,18 +16,6 @@ const LoginForm = (props: ILoginFormProps) => {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-  useEffect(() => {
-    console.log(
-      "process.env.NEXT_PUBLIC_API_ENDPOINT: ",
-      process.env.NEXT_PUBLIC_API_ENDPOINT
-    );
-    console.log("process.env.NEXTAUTH_SECRET: ", process.env.NEXTAUTH_SECRET);
-    console.log("process.env.NEXTAUTH_URL: ", process.env.NEXTAUTH_URL);
-    console.log(
-      "process.env.__NEXT_PRIVATE_PREBUNDLED_REACT: ",
-      process.env.__NEXT_PRIVATE_PREBUNDLED_REACT
-    );
-  }, []);
 
   const onFormSubmit = async (e: any) => {
     setLoading(true);

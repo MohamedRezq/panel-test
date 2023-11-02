@@ -7,7 +7,6 @@ export const getItems = async (
   auth?: string
 ) => {
   try {
-    console.log("got params: ", params);
     //----------------------------------------------------//
     const query = Object.entries(params).filter(
       ([key, value]) => key !== "tab"

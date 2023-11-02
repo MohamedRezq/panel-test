@@ -221,7 +221,6 @@ const MainTable = (props: IMainTableProps) => {
             : defaultRows;
           totalData.push(...newRows);
         }
-        console.log("totalData: ", totalData);
         setData(totalData);
         setTotalRows(totalData.length);
       }
