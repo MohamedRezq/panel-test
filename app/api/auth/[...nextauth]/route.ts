@@ -35,7 +35,7 @@ const authOptions: AuthOptions = {
   ],
 
   pages: {
-    signIn: `/login?callbackUrl=/dashboard`,
+    signIn: `/login?callbackUrl=${PANEL_ENDPOINT}/dashboard`,
     error: `/login?error=FAILED`,
     signOut: "/login",
   },
