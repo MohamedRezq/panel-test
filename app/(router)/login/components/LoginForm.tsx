@@ -28,7 +28,10 @@ const LoginForm = (props: ILoginFormProps) => {
     });
     setLoading(false);
     if (!res?.error) {
-      router.push(props.callbackUrl ?? PANEL_ENDPOINT);
+      router.push(
+        props.callbackUrl ??
+          "https://main.dg70fpt7q3vj.amplifyapp.com/dashboard?tab=orders"
+      );
     } else {
       setError("Please try again!");
     }
