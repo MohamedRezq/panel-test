@@ -22,7 +22,7 @@ import LocalShippingIcon from "@mui/icons-material/LocalShipping";
 import CancelIcon from "@mui/icons-material/Cancel";
 import { useSession } from "next-auth/react";
 import { getItems } from "@/lib/common/get";
-import { format } from "date-fns";
+import moment from "moment";
 import GenericModal from "@/app/components/common/GenericModal";
 import {
   pickerCancelOrder,
@@ -146,7 +146,7 @@ const PickerPage = () => {
                     }}
                   />
                 </Tooltip>
-                <Tooltip title={`Reschedule order: ${params.value}`}>
+                {/* <Tooltip title={`Reschedule order: ${params.value}`}>
                   <UpdateIcon
                     color="action"
                     sx={{ cursor: "pointer" }}
@@ -165,7 +165,7 @@ const PickerPage = () => {
                       setOpenDeliverOrderModal(!openDeliverOrderModal);
                     }}
                   />
-                </Tooltip>
+                </Tooltip> */}
               </>
             )}
         </Box>
@@ -198,11 +198,11 @@ const PickerPage = () => {
     },
     {
       field: "created_at",
-      headerName: "Created At",
+      headerName: "Created at",
       width: 200,
       sortable: true,
       valueGetter: (params: GridCellParams) =>
-        format(new Date(params.row.created_at), "dd/MM/yyyy HH:mm:ss"),
+        moment.unix(params.row.created_at).format("YYYY-MM-DD HH:mm:ss"),
       renderCell: (params: any) => <span>{params?.value}</span>,
     },
     {
@@ -228,7 +228,9 @@ const PickerPage = () => {
       valueGetter: (params: any) =>
         `${params?.row?.pricing?.grand_total?.amount}`,
       renderCell: (params: any) => (
-        <span style={{ fontWeight: "bold" }}>{Number(params.value)} SAR</span>
+        <span style={{ fontWeight: "bold" }}>
+          {Number(params.value).toFixed(2)} SAR
+        </span>
       ),
     },
     {
@@ -240,7 +242,9 @@ const PickerPage = () => {
       valueGetter: (params: any) =>
         `${params?.row?.pricing?.items?.at(0)?.amount}`,
       renderCell: (params: any) => (
-        <span style={{ fontWeight: "bold" }}>{Number(params.value)} SAR</span>
+        <span style={{ fontWeight: "bold" }}>
+          {Number(params.value).toFixed(2)} SAR
+        </span>
       ),
     },
     {
@@ -252,7 +256,9 @@ const PickerPage = () => {
       valueGetter: (params: any) =>
         `${params?.row?.pricing?.items?.at(1)?.amount}`,
       renderCell: (params: any) => (
-        <span style={{ fontWeight: "bold" }}>{Number(params.value)} SAR</span>
+        <span style={{ fontWeight: "bold" }}>
+          {Number(params.value).toFixed(2)} SAR
+        </span>
       ),
     },
     {
@@ -290,10 +296,9 @@ const PickerPage = () => {
       width: 200,
       sortable: true,
       valueGetter: (params: any) =>
-        format(
-          new Date(params?.row?.delivery?.ts_from_time),
-          "dd/MM/yyyy HH:mm:ss"
-        ),
+        moment
+          .unix(params?.row?.delivery?.ts_from_time)
+          .format("YYYY-MM-DD HH:mm:ss"),
     },
     {
       field: "delivery_ts_to_time",
@@ -301,10 +306,9 @@ const PickerPage = () => {
       width: 200,
       sortable: true,
       valueGetter: (params: any) =>
-        format(
-          new Date(params?.row?.delivery?.ts_to_time),
-          "dd/MM/yyyy HH:mm:ss"
-        ),
+        moment
+          .unix(params?.row?.delivery?.ts_to_time)
+          .format("YYYY-MM-DD HH:mm:ss"),
     },
     {
       field: "branch_id",
@@ -479,9 +483,40 @@ const PickerPage = () => {
               if (e?.visibleRowsLookup[key]) {
                 for (const similar_key in e?.rows?.dataRowIdToModelLookup) {
                   if (key == similar_key) {
-                    filteredRows.push(
-                      e?.rows?.dataRowIdToModelLookup[similar_key]
-                    );
+                    const foundRow =
+                      e?.rows?.dataRowIdToModelLookup[similar_key];
+                    filteredRows.push({
+                      ID: foundRow?.hashed_id,
+                      Timeslot: foundRow?.timeslot,
+                      Status: foundRow?.status_text,
+                      created_at: `${moment
+                        .unix(foundRow?.created_at)
+                        .format("YYYY-MM-DD HH:mm:ss")}`,
+                      customer_id: foundRow?.customer_id,
+                      customer_name: `${foundRow?.user?.firstname} ${foundRow?.user?.lastname}`,
+                      total_amount: Number(
+                        foundRow?.pricing?.grand_total?.amount
+                      ).toFixed(2),
+                      retail_price: Number(
+                        foundRow?.pricing?.items?.at(0)?.amount
+                      ).toFixed(2),
+                      delivery_price: Number(
+                        foundRow?.pricing?.items?.at(1)?.amount
+                      ).toFixed(2),
+                      payment_status: foundRow?.payment_status,
+                      Vat: Number(foundRow?.vat).toFixed(2),
+                      "Payment Method": foundRow?.payment_method_name,
+                      "Delivery From": `${moment
+                        .unix(foundRow?.delivery?.ts_from_time)
+                        .format("YYYY-MM-DD HH:mm:ss")}`,
+                      "Delivery To": `${moment
+                        .unix(foundRow?.delivery?.ts_to_time)
+                        .format("YYYY-MM-DD HH:mm:ss")}`,
+                      "Branch ID": foundRow?.delivery?.branch?.id,
+                      "Branch Name": foundRow?.delivery?.branch?.name,
+                      "Branch City": foundRow?.delivery?.branch?.city,
+                      Address: foundRow?.delivery?.address?.formatted_address,
+                    });
                     break;
                   }
                   continue;
@@ -507,12 +542,13 @@ const PickerPage = () => {
         type="confirmation"
         question={`Do you want to cancel order: ${targetOrder}?`}
         open={openCancelOrderModal}
-        onConfirm={() =>
-          pickerCancelOrder(
+        onConfirm={async () => {
+          const res = await pickerCancelOrder(
             targetOrder,
             session?.user?.data?.user?.key?.auth_key
-          )
-        }
+          );
+          setSyncing(!syncing);
+        }}
         onClose={() => setOpenCancelOrderModal(!openCancelOrderModal)}
       />
       <GenericModal
@@ -549,7 +585,6 @@ const PickerPage = () => {
               ?.replace("T", " ")}`,
             session?.user?.data?.user?.key?.auth_key
           );
-          console.log("res: ", res);
         }}
         handleParentParameter={setNewRescheduleTime}
         onClose={() => setOpenRescheduleOrderModal(!openRescheduleOrderModal)}
