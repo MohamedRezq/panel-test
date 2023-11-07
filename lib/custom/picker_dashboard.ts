@@ -49,3 +49,25 @@ export const pickerRescheduleOrder = async (
     console.log(error);
   }
 };
+
+//--------------------------------------------------------------------//
+//--------------------------------------------------------------------//
+//--> Picker: Deliver Order
+//--------------------------------------------------------------------//
+export const pickerDeliverOrder = async (id: string, auth: string) => {
+  try {
+    const response = await httpServices.patch(
+      `${API_BASEURL}/orders/admin/${id}/deliver`,
+      {},
+      {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${auth}`,
+        },
+      }
+    );
+    return response;
+  } catch (error: any | null) {
+    console.log(error);
+  }
+};

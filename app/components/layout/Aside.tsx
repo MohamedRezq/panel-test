@@ -4,6 +4,7 @@ import React, { FC, useState } from "react";
 import LocalShippingSharpIcon from "@mui/icons-material/LocalShippingSharp";
 import logo from "@/public/images/panda-logo.png";
 import Link from "next/link";
+import GridViewIcon from "@mui/icons-material/GridView";
 import { Menu } from "@mui/icons-material";
 import { Box, Typography } from "@mui/material";
 import { useRouter } from "next/navigation";
@@ -89,9 +90,9 @@ export const tabs: tabProps[] = [
   //   icon: <MdOutlineAccountBalance />, // Update the icon to a relevant one
   // },
   {
-    text: "Orders",
+    text: "Picker Dashboard",
     url: "/dashboard/picker",
-    icon: <LocalShippingSharpIcon />, // Update the icon to a relevant one
+    icon: <GridViewIcon />, // Update the icon to a relevant one
   },
   // {
   //   text: "Requested Products",

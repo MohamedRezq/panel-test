@@ -1,7 +1,14 @@
 "use client";
 import { alpha, styled } from "@mui/material/styles";
 import React, { useEffect, useState } from "react";
-import { Box, Button, Chip, Tooltip, Typography } from "@mui/material";
+import {
+  Box,
+  Button,
+  Chip,
+  Snackbar,
+  Tooltip,
+  Typography,
+} from "@mui/material";
 import SyncIcon from "@mui/icons-material/Sync";
 import {
   DataGrid,
@@ -11,6 +18,7 @@ import {
   gridClasses,
 } from "@mui/x-data-grid";
 import UpdateIcon from "@mui/icons-material/Update";
+import LocalShippingIcon from "@mui/icons-material/LocalShipping";
 import CancelIcon from "@mui/icons-material/Cancel";
 import { useSession } from "next-auth/react";
 import { getItems } from "@/lib/common/get";
@@ -18,6 +26,7 @@ import { format } from "date-fns";
 import GenericModal from "@/app/components/common/GenericModal";
 import {
   pickerCancelOrder,
+  pickerDeliverOrder,
   pickerRescheduleOrder,
 } from "@/lib/custom/picker_dashboard";
 import { DASHBOARD_CONFIG } from "@/config";
@@ -25,6 +34,7 @@ import ExportBtn from "@/app/components/common/ExportBtn";
 import { uncapitalizeObjectKeys } from "@mui/x-data-grid/internals";
 import { useRouter } from "next/navigation";
 import Loader from "@/app/components/common/Loader";
+import GenericSnackbar from "@/app/components/common/GenericSnackbar";
 
 const ODD_OPACITY = 0.2;
 
@@ -66,6 +76,7 @@ const PickerPage = () => {
   const [syncing, setSyncing] = useState(false);
   const [targetOrder, setTargetOrder] = useState<string>("");
   const [openCancelOrderModal, setOpenCancelOrderModal] = useState(false);
+  const [openDeliverOrderModal, setOpenDeliverOrderModal] = useState(false);
   const [visibleRows, setVisibleRows] = useState<any[]>([]);
   const [openRescheduleOrderModal, setOpenRescheduleOrderModal] =
     useState(false);
@@ -117,37 +128,49 @@ const PickerPage = () => {
       field: "hashed_id",
       headerName: "ID",
       width: 200,
-      renderCell: (params: any) => (
+      valueGetter: (params: any) => (
         <Box display="flex" alignContent="center" gap={1}>
           <Typography fontSize={12}>{params.value}</Typography>
           {session?.user?.data?.user?.permissions?.filter(
             (p: string) => p == "supervisor"
-          )?.length != 0 && (
-            <>
-              <Tooltip title={`Cancel order: ${params.value}`}>
-                <CancelIcon
-                  color="error"
-                  sx={{ cursor: "pointer" }}
-                  onClick={() => {
-                    setTargetOrder(params.value);
-                    setOpenCancelOrderModal(!openCancelOrderModal);
-                  }}
-                />
-              </Tooltip>
-              <Tooltip title={`Reschedule order: ${params.value}`}>
-                <UpdateIcon
-                  color="action"
-                  sx={{ cursor: "pointer" }}
-                  onClick={() => {
-                    setTargetOrder(params.value);
-                    setOpenRescheduleOrderModal(!openRescheduleOrderModal);
-                  }}
-                />
-              </Tooltip>
-            </>
-          )}
+          )?.length != 0 &&
+            Number(params?.row?.status) < 6 && (
+              <>
+                <Tooltip title={`Cancel order: ${params.value}`}>
+                  <CancelIcon
+                    color="error"
+                    sx={{ cursor: "pointer" }}
+                    onClick={() => {
+                      setTargetOrder(params.value);
+                      setOpenCancelOrderModal(!openCancelOrderModal);
+                    }}
+                  />
+                </Tooltip>
+                <Tooltip title={`Reschedule order: ${params.value}`}>
+                  <UpdateIcon
+                    color="action"
+                    sx={{ cursor: "pointer" }}
+                    onClick={() => {
+                      setTargetOrder(params.value);
+                      setOpenRescheduleOrderModal(!openRescheduleOrderModal);
+                    }}
+                  />
+                </Tooltip>
+                <Tooltip title={`Deliver order: ${params.value}`}>
+                  <LocalShippingIcon
+                    color="success"
+                    sx={{ cursor: "pointer" }}
+                    onClick={() => {
+                      setTargetOrder(params.value);
+                      setOpenDeliverOrderModal(!openDeliverOrderModal);
+                    }}
+                  />
+                </Tooltip>
+              </>
+            )}
         </Box>
       ),
+      renderCell: (params: any) => params?.value,
     },
     {
       field: "timeslot",
@@ -493,13 +516,32 @@ const PickerPage = () => {
         onClose={() => setOpenCancelOrderModal(!openCancelOrderModal)}
       />
       <GenericModal
+        type="confirmation"
+        question={`Do you want to deliver order: ${targetOrder}?`}
+        open={openDeliverOrderModal}
+        onConfirm={async () => {
+          const res: any = await pickerDeliverOrder(
+            targetOrder,
+            session?.user?.data?.user?.key?.auth_key
+          );
+          if (res?.status == 200) {
+            <GenericSnackbar
+              message={`Delivered order: ${targetOrder} successfully`}
+              handleOpen={true}
+            />;
+          } else {
+          }
+        }}
+        onClose={() => setOpenDeliverOrderModal(!openDeliverOrderModal)}
+      />
+      <GenericModal
         type="form"
         attributes={[{ label: "", type: "date" }]}
         question={`Reschedule order: ${targetOrder}`}
         open={openRescheduleOrderModal}
         onConfirm={() => {
           const delivery_start_time = newRescheduleTime?.$d ?? new Date();
-          pickerRescheduleOrder(
+          const res = pickerRescheduleOrder(
             targetOrder,
             `${delivery_start_time
               ?.toISOString()
@@ -507,6 +549,7 @@ const PickerPage = () => {
               ?.replace("T", " ")}`,
             session?.user?.data?.user?.key?.auth_key
           );
+          console.log("res: ", res);
         }}
         handleParentParameter={setNewRescheduleTime}
         onClose={() => setOpenRescheduleOrderModal(!openRescheduleOrderModal)}
