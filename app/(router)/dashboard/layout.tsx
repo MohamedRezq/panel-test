@@ -1,18 +1,23 @@
 "use client";
-import Header from "@/app/components/Header/Header";
-import Aside from "@/app/components/Aside/Aside";
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
+import Header from "@/app/components/layout/Header";
+import { Box } from "@mui/material";
+import Aside from "@/app/components/layout/Aside";
 import { useSession } from "next-auth/react";
 import { redirect } from "next/navigation";
 import Loader from "@/app/components/common/Loader";
 
-export default function RootLayout({
+export default function DashboardLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
   const { data: session } = useSession();
-  const [expanded, setExpanded] = useState(false);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+
+  const toggleSidebar = () => {
+    setIsSidebarOpen(!isSidebarOpen);
+  };
   const [loading, setLoading] = useState(true);
   //--------------------------------------------------//
   useEffect(() => {
@@ -26,17 +31,20 @@ export default function RootLayout({
       {loading ? (
         <Loader />
       ) : (
-        <>
-          {!expanded && <Aside />}
-          <main className={`main-content h-50 ${expanded ? "w-100" : " w-75"}`}>
-            <Header
-              setExpanded={setExpanded}
-              expanded={expanded}
-              session={session}
-            />
-            <div className="w-100 p-2">{children}</div>
-          </main>
-        </>
+        <main>
+          <Header toggleSidebar={toggleSidebar} />
+          <Box display="flex">
+            {isSidebarOpen && <Aside />}
+            <Box
+              sx={{
+                height: "100%",
+                width: `${isSidebarOpen ? "80%" : "100%"}`,
+              }}
+            >
+              {children}
+            </Box>
+          </Box>
+        </main>
       )}
     </>
   );

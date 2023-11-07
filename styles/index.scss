@@ -21,6 +21,11 @@ code {
 a {
   text-decoration: none !important;
 }
+
+.MuiDataGrid-columnHeadersInner {
+  font-size: 11pt;
+  font-weight: 800;
+}
 //-----------------------------------------------------------------------------------//
 //-----------------------------------------------------------------------------------//
 
@@ -30,7 +35,6 @@ a {
 @import url("https://fonts.cdnfonts.com/css/blogger-sans");
 @import url("https://fonts.cdnfonts.com/css/roboto");
 @import url("https://fonts.cdnfonts.com/css/avenir");
-@import "node_modules/bootstrap/scss/bootstrap"; // BootStrap Library
 //-----------------------------------------------------------------------------------//
 //-----------------------------------------------------------------------------------//
 

@@ -1,26 +1,28 @@
 "use client";
-import MainCalendar from "@/app/components/Data/MainCalendar";
-import MainTable from "@/app/components/Data/MainTable";
-import { useSearchParams } from "next/navigation";
+import { useEffect } from "react";
+import Box from "@mui/material/Box";
+import { redirect } from "next/navigation";
+import Image from "next/image";
+import logo from "@/public/images/panda-icon.png";
 
-export default function Home() {
-  const searchParams = useSearchParams();
-  const params = {
-    tab: searchParams.get("tab") || "products",
-    sort: searchParams.get("sort") || undefined,
-    branch_id: searchParams.get("branch_id") || undefined,
-    delivery_type: searchParams.get("delivery_type") || undefined,
-    perPage: Number(searchParams.get("perPage")) || undefined,
-    status: searchParams.get("status") || undefined,
-  };
+const DashboardPage = () => {
+  useEffect(() => {
+    redirect("/dashboard/picker");
+  }, []);
 
   return (
-    <>
-      {searchParams.get("tab") !== "timeslots" ? (
-        <MainTable params={params} />
-      ) : (
-        <MainCalendar />
-      )}
-    </>
+    <Box
+      display="flex"
+      flexDirection="column"
+      justifyContent="center"
+      alignContent="center"
+      gap={3}
+      sx={{ width: "100%", height: "100%" }}
+    >
+      <Box fontSize={14}>Welcome to Panda Dashboard</Box>
+      <Image src={logo} alt="Panda" />
+    </Box>
   );
-}
+};
+
+export default DashboardPage;

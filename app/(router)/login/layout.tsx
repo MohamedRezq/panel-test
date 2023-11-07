@@ -1,11 +1,13 @@
+import { Box } from "@mui/material";
+
 export default function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
   return (
-    <main className="login-page d-flex w-100 h-100 justify-content-center align-items-center">
+    <Box component="main" className="login-page">
       {children}
-    </main>
+    </Box>
   );
 }

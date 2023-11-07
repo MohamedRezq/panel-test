@@ -1,5 +1,5 @@
-import { PANEL_ENDPOINT } from "@/config";
-import { login } from "@/lib/auth";
+import { APP_BASEURL } from "@/config";
+import { login } from "@/lib/auth/login";
 import { AuthOptions, User } from "next-auth";
 import NextAuth from "next-auth/next";
 import CredentialsProvider from "next-auth/providers/credentials";
@@ -35,7 +35,7 @@ const authOptions: AuthOptions = {
   ],
 
   pages: {
-    signIn: `/login?callbackUrl=${PANEL_ENDPOINT}/dashboard`,
+    signIn: `/login?callbackUrl=${APP_BASEURL}/dashboard`,
     error: `/login?error=FAILED`,
     signOut: "/login",
   },

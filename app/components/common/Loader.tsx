@@ -1,9 +1,16 @@
 import Image from "next/image";
-import logo from "@/public/images/temp.png";
+import logo from "@/public/images/panda-icon.png";
+import { Box } from "@mui/material";
 
 const Loader = () => {
   return (
-    <div className="d-flex justify-content-center align-items-center w-100 h-100">
+    <Box
+      display="flex"
+      justifyContent="center"
+      alignItems="center"
+      width={"100%"}
+      height={"100%"}
+    >
       <div className="blink">
         <Image
           src={logo}
@@ -15,7 +22,7 @@ const Loader = () => {
           style={{ width: "auto", height: "auto" }}
         />
       </div>
-    </div>
+    </Box>
   );
 };
 

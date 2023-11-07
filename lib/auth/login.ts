@@ -1,9 +1,6 @@
 import { User } from "next-auth";
-import { API_ENDPOINT } from "@/config";
+import { API_BASEURL } from "@/config";
 import httpServices from "@/utils/httpServices";
-// import prisma from "./prisma";
-
-// import { compare } from "bcrypt";
 
 type LoginFn = (username: string, password: string) => Promise<User>;
 
@@ -13,13 +10,14 @@ export const login: LoginFn = async (username, password) => {
       username,
       password,
       device_info: {
+        //TODO Change this device_id
         device_id: "jhagsd71186e-12j86-12s34153",
       },
     },
   };
   try {
     const response = await httpServices.post(
-      `${API_ENDPOINT}/admin_users/login`,
+      `${API_BASEURL}/admin_users/login`,
       userData,
       {
         headers: {
@@ -27,6 +25,7 @@ export const login: LoginFn = async (username, password) => {
         },
       }
     );
+    console.log("api login res: ", response);
     return response.data;
   } catch (error: any | null) {
     console.log("error: ", error);

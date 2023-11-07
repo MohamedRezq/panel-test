@@ -1,7 +1,7 @@
+import { Button } from "@mui/material";
 import exportFromJSON, { ExportType } from "export-from-json";
+import IosShareIcon from "@mui/icons-material/IosShare";
 import React from "react";
-import { Button } from "react-bootstrap";
-import { BiExport } from "react-icons/bi";
 
 interface IExportFileProps {
   fileName: string;
@@ -9,11 +9,10 @@ interface IExportFileProps {
   exportType?: ExportType;
 }
 
-const ExportCsvBtn = (props: IExportFileProps) => {
+const ExportBtn = (props: IExportFileProps) => {
   return (
     <Button
       key="import"
-      style={{ backgroundColor: "green" }}
       onClick={() =>
         exportFromJSON({
           data: props.data,
@@ -21,12 +20,17 @@ const ExportCsvBtn = (props: IExportFileProps) => {
           exportType: props?.exportType ?? "csv",
         })
       }
-      className="d-flex gap-2 align-items-center"
+      sx={{
+        marginRight: "15px",
+        marginLeft: "15px",
+      }}
+      variant="contained"
+      color="info"
+      endIcon={<IosShareIcon />}
     >
-      <div>EXPORT</div>
-      <BiExport size={18} />
+      Export
     </Button>
   );
 };
 
-export default ExportCsvBtn;
+export default ExportBtn;
