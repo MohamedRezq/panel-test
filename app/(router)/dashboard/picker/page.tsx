@@ -491,7 +491,7 @@ const PickerPage = () => {
             setVisibleRows(filteredRows);
           }}
           columns={columns}
-          getRowClassName={(params) =>
+          getRowClassName={(params: any) =>
             params.indexRelativeToCurrentPage % 2 === 0 ? "even" : "odd"
           }
           pageSizeOptions={[5]}
