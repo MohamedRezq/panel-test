@@ -1,9 +1,11 @@
-import { GridColDef } from "@mui/x-data-grid";
 import LocalShippingIcon from "@mui/icons-material/LocalShipping";
 //-----------------------------------------------------------------------//
 //-----------------------------------------------------------------------//
 export const APP_BASEURL = process.env.NEXTAUTH_URL;
 export const API_BASEURL = process.env.NEXT_PUBLIC_API_BASEURL;
+export const REFRESH_TOKEN_LIFETIME = 14 * 24 * 60 * 60; // 14 Days
+export const ACCESS_TOKEN_LIFETIME = 24 * 60 * 60; // 1 Days
+export const VERSION_NUMBER = "1.2.0";
 //-----------------------------------------------------------------------//
 //-----------------------------------------------------------------------//
 export const DASHBOARD_CONFIG = new Map([

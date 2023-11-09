@@ -1,58 +1,46 @@
-"use client";
 import * as React from "react";
+import Stack from "@mui/material/Stack";
 import Button from "@mui/material/Button";
 import Snackbar from "@mui/material/Snackbar";
-import IconButton from "@mui/material/IconButton";
-import CloseIcon from "@mui/icons-material/Close";
+import MuiAlert, { AlertColor, AlertProps } from "@mui/material/Alert";
 
-export default function GenericSnackbar({
-  message,
-  handleOpen,
-}: {
+const Alert = React.forwardRef<HTMLDivElement, AlertProps>(function Alert(
+  props,
+  ref
+) {
+  return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
+});
+
+type SnackbarProps = {
+  type: "error" | "warning" | "info" | "success";
   message: string;
-  handleOpen: any;
-}) {
-  const [open, setOpen] = React.useState(handleOpen);
+  open: boolean;
+  onClose: () => void;
+};
 
-  React.useEffect(() => {}, [message, open]);
+export default function GenericSnackbar(props: SnackbarProps) {
+  const { type, message, open, onClose } = props;
 
-  const handleClose = (
-    event: React.SyntheticEvent | Event,
-    reason?: string
-  ) => {
-    if (reason === "clickaway") {
-      return;
-    }
-    setOpen(false);
+  const handleClick = () => {
+    onClose();
   };
 
   return (
-    <div>
-      {/* <Button onClick={handleClick("Message A")}>Show message A</Button>
-      <Button onClick={handleClick("Message B")}>Show message B</Button> */}
+    <Stack spacing={2} sx={{ width: "100%" }}>
       <Snackbar
-        key={message}
+        anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
         open={open}
         autoHideDuration={6000}
-        onClose={handleClose}
-        // TransitionProps={{ onExited: handleExited }}
-        message={message}
-        action={
-          <React.Fragment>
-            {/* <Button color="secondary" size="small" onClick={handleClose}>
-              UNDO
-            </Button> */}
-            <IconButton
-              aria-label="close"
-              color="inherit"
-              sx={{ p: 0.5 }}
-              onClick={handleClose}
-            >
-              <CloseIcon />
-            </IconButton>
-          </React.Fragment>
-        }
-      />
-    </div>
+        onClose={onClose}
+      >
+        <Alert
+          onClose={onClose}
+          severity={type as AlertColor}
+          sx={{ width: "100%" }}
+        >
+          {message}
+        </Alert>
+      </Snackbar>
+    </Stack>
   );
 }

@@ -1,0 +1,13 @@
+.main-picker-table {
+  flex-direction: column-reverse;
+}
+
+.MuiDataGrid-overlayWrapperInner,
+.MuiDataGrid-overlayWrapper {
+  min-height: 200px !important;
+  width: 100%;
+}
+.MuiDataGrid-columnHeaderTitle {
+  font-size: 11pt !important;
+  font-weight: bold !important;
+}

@@ -1,8 +1,8 @@
-import { User } from "next-auth";
 import { API_BASEURL } from "@/config";
 import httpServices from "@/utils/httpServices";
+import { IUser } from "./types";
 
-type LoginFn = (username: string, password: string) => Promise<User>;
+type LoginFn = (username: string, password: string) => Promise<IUser>;
 
 export const login: LoginFn = async (username, password) => {
   const userData = {
@@ -25,10 +25,10 @@ export const login: LoginFn = async (username, password) => {
         },
       }
     );
-    console.log("api login res: ", response);
-    return response.data;
+    console.log("return login: ", response?.data?.data?.user);
+    return response?.data?.data?.user;
   } catch (error: any | null) {
-    console.log("error: ", error);
-    return null;
+    console.log("error: ", error?.response?.data?.error?.message);
+    return { error: error?.response?.data?.error?.message };
   }
 };

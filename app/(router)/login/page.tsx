@@ -1,8 +1,9 @@
 "use client";
+import { setCookie } from "nookies";
 import React, { useState } from "react";
-import { Box, Button, Container, TextField, Typography } from "@mui/material";
+import { Box, Button, Container, Typography } from "@mui/material";
 import { useRouter } from "next/navigation";
-import { signIn } from "next-auth/react";
+// import { signIn } from "next-auth/react";
 import Loader from "@/app/components/common/Loader";
 import Image from "next/image";
 import logo from "@/public/images/panda-logo.png";
@@ -14,13 +15,15 @@ import InputAdornment from "@mui/material/InputAdornment";
 import FormControl from "@mui/material/FormControl";
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
+import { login } from "@/lib/auth/login";
+import { ACCESS_TOKEN_LIFETIME, REFRESH_TOKEN_LIFETIME } from "@/config";
 
 const LoginPage = (props: {
   searchParams?: Record<"callbackUrl" | "error", string>;
 }) => {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
+  const [error, setError] = useState<any>("");
   const [showPassword, setShowPassword] = React.useState(false);
 
   const handleClickShowPassword = () => setShowPassword((show) => !show);
@@ -38,20 +41,30 @@ const LoginPage = (props: {
     const username = e?.currentTarget?.elements["username"]?.value;
     const password = e?.currentTarget?.elements["password"]?.value;
 
-    const res = await signIn("credentials", {
-      username,
-      password,
-      redirect: false,
-    });
+    const res = await login(username, password);
 
     setLoading(false);
 
-    if (!res?.error) {
+    //--> Check for auth keys for returned user
+    if (res?.key) {
+      // Set
+      setCookie(null, "panda_console_session", JSON.stringify(res), {
+        maxAge: REFRESH_TOKEN_LIFETIME, // Refresh token lifetime
+        // path: "/",
+      });
+      setCookie(null, "panda_console_access_token", res.key.auth_key, {
+        maxAge: ACCESS_TOKEN_LIFETIME, // Access token lifetime
+        // path: "/",
+      });
+      setCookie(null, "panda_console_refresh_token", res.key.refresh_key, {
+        maxAge: REFRESH_TOKEN_LIFETIME, // Refresh token lifetime
+        // path: "/",
+      });
       router.push(
         props.searchParams?.callbackUrl ?? `${window.location.origin}/dashboard`
       );
     } else {
-      setError("Please try again!");
+      setError(res);
     }
   };
 
@@ -165,7 +178,7 @@ const LoginPage = (props: {
                   color="error"
                   className="login-error"
                 >
-                  {error}
+                  {JSON.stringify(error)}
                 </Typography>
               )}
               <Button

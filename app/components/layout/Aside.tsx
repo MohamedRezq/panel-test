@@ -8,6 +8,7 @@ import GridViewIcon from "@mui/icons-material/GridView";
 import { Menu } from "@mui/icons-material";
 import { Box, Typography } from "@mui/material";
 import { useRouter } from "next/navigation";
+import { VERSION_NUMBER } from "@/config";
 
 export interface tabProps {
   text: string;
@@ -181,7 +182,7 @@ const Aside: FC<AsideProps> = () => {
         ))}
       </Box>
       <Typography fontSize={12} color="gray">
-        Version 1.0.0
+        Version {VERSION_NUMBER}
       </Typography>
     </Box>
   );

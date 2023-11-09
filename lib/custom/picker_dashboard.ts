@@ -18,6 +18,7 @@ export const pickerCancelOrder = async (id: string, auth: string) => {
     return response;
   } catch (error: any | null) {
     console.log(error);
+    return null;
   }
 };
 
@@ -47,6 +48,7 @@ export const pickerRescheduleOrder = async (
     return response;
   } catch (error: any | null) {
     console.log(error);
+    return null;
   }
 };
 
@@ -69,5 +71,6 @@ export const pickerDeliverOrder = async (id: string, auth: string) => {
     return response;
   } catch (error: any | null) {
     console.log(error);
+    return null;
   }
 };

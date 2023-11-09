@@ -1,4 +1,11 @@
-import { Box } from "@mui/material";
+"use client";
+import { Box, CssBaseline, ThemeProvider, createTheme } from "@mui/material";
+
+const lightTheme = createTheme({
+  palette: {
+    mode: "light",
+  },
+});
 
 export default function RootLayout({
   children,
@@ -6,8 +13,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <Box component="main" className="login-page">
-      {children}
-    </Box>
+    <ThemeProvider theme={lightTheme}>
+      <CssBaseline />
+      <Box component="main" className="login-page">
+        {children}
+      </Box>
+    </ThemeProvider>
   );
 }
