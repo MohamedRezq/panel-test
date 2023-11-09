@@ -955,7 +955,7 @@ const PickerPage = () => {
                         {
                           field: "name",
                           headerName: "Name",
-                          width: "100%",
+                          width: 400,
                         },
                         {
                           field: "image_url",
